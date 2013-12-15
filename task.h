@@ -7,25 +7,42 @@
 #include <QPair>
 #include <QMap>
 
-class Task : public QRunnable
+class Task : public QObject
 {
     Q_OBJECT
 
+public:
+    typedef QMap<QString, QNetworkReply*>::iterator iterator;
+
+private:
     int _index;
     QPair<int, int> _from;
     QPair<int, int> _to;
 
-    QMap<QString, QString> _data;
+    QPair<int, int> _current;
+
+    QMap<QString, QNetworkReply*> _data;
 
     QNetworkAccessManager* _network;
+
+    bool _canselled;
 
 public:
     Task(int index, QPair<int, int> from, QPair<int, int> to);
     virtual ~Task();
-    void run();
 
+    int index() const { return _index; }
 signals:
-    void
+    void finished();
+    void log(int, QString);
+
+public slots:
+    void start();
+    void stop();
+
+private slots:
+    void replyFinished(QNetworkReply*);
+    void parseReplies();
 
 };
 

@@ -1,7 +1,7 @@
-QT += widgets network
+QT += widgets network concurrent
 
 QMAKE_CXXFLAGS_WARN_ON += -Wextra -Wall -Wno-sign-compare
-QMAKE_CXXFLAGS += -pipe -std=c++11
+QMAKE_CXXFLAGS += -pipe -std=c++0x
 
 SOURCES += \
     main.cpp \
@@ -11,4 +11,4 @@ SOURCES += \
 HEADERS += \
     window.h \
     task.h \
-    Day.h
+    day.h

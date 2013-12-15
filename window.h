@@ -2,11 +2,15 @@
 #define WINDOW_H
 
 #include <QWidget>
+#include <QThread>
+
+#include "task.h"
 
 class QLabel;
 class QLineEdit;
+class QTextEdit;
+class QDateEdit;
 class QPushButton;
-class QProgressBar;
 class QNetworkAccessManager;
 
 class Window : public QWidget
@@ -16,17 +20,27 @@ class Window : public QWidget
     QLabel* _label;
     QLineEdit* _text;
     QPushButton* _button;
-    QProgressBar* _bar;
+    QTextEdit* _edit;
+    QDateEdit* _from;
+    QDateEdit* _to;
 
     bool _working;
+
+    QList<QThread*> _threads;
+    QList<Task*> _tasks;
 
 public:
     explicit Window(QWidget *parent = 0);
     
 signals:
+
+public slots:
+    void log(int index, QString str);
     
 private slots:
     void startParsing();
+    void stopParsing();
+    void finished();
 };
 
 #endif // WINDOW_H
