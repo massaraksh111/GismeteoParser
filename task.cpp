@@ -29,6 +29,12 @@ Task::~Task()
 
 void Task::start()
 {
+    if(_canselled)
+    {
+        emit log(_index, "Отменено");
+        emit finished();
+    }
+
     QString str = QString("http://www.gismeteo.ru/diary/%1/%3/%2/")
             .arg(_index).arg(_from.first).arg(_from.second);
 
@@ -40,6 +46,7 @@ void Task::stop()
     _canselled = true;
     disconnect(_network, SIGNAL(finished(QNetworkReply*)),
                this, SLOT(replyFinished(QNetworkReply*)));
+    parseReplies();
     start();
 }
 
@@ -50,16 +57,13 @@ void Task::replyFinished(QNetworkReply* reply)
 
     emit log(_index, QString("Ответ %1 получен").arg(str));
 
-    if(_from.first < 0)
+    if(_from.first < 1)
     {
         _from.second--;
         _from.first = 12;
     }
 
-    QDate from(_from.second, _from.first, 1);
-    QDate to(_to.second, _to.first, 1);
-
-    if(from < to)
+    if(_from.first < _to.first && _from.second <= _to.second)
     {
         emit log(_index, "Данные получены");
         parseReplies();

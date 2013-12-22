@@ -45,7 +45,8 @@ Window::Window(QWidget *parent) :
 
 void Window::log(int index, QString str)
 {
-    QString text = QString("%1%2: %3\n").arg(_edit->toPlainText()).arg(index).arg(str);
+    QString text = QString("%1%4: %2 -> %3\n").arg(_edit->toPlainText()).arg(index)
+                        .arg(str).arg(QTime::currentTime().toString());
     QTextCursor tmpCursor = _edit->textCursor();
 
     _edit->setText(text);
@@ -59,6 +60,7 @@ void Window::startParsing()
     if(_text->text().isEmpty())
         return;
 
+    _edit->setPlainText("");
     _button->setText("Отменить");
 
     disconnect(_button, SIGNAL(clicked()), this, SLOT(startParsing()));
